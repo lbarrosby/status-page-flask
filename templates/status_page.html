@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Health</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .service-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 5px;
+        }
+        .status-icon {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+        .status-definition {
+            margin-top: 20px;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .status-definition p {
+            margin-bottom: 5px;
+        }
+        .status-definition p i {
+            margin-right: 10px;
+        }
+        /* Estilo do card Events */
+        .events-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .events-card-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .event-item {
+            margin-bottom: 10px;
+        }
+        .event-icon {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+        .svg-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 1h; /* Altura total da tela */
+        }
+        /* Estilo para a tabela */
+        .table {
+            background-color: #f8f9fa; /* Cor da tabela */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Sombra da tabela */
+        }
+        /* Estilo para o navbar */
+        .navbar {
+            background-color: #f8f9fa; /* Cor de fundo do navbar */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <div class="svg-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#4CAF50" class="bi bi-heart-pulse" viewBox="0 0 16 16">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053.918 3.995.78 5.323 1.508 7H.43c-2.128-5.697 4.165-8.83 7.394-5.857q.09.083.176.171a3 3 0 0 1 .176-.17c3.23-2.974 9.522.159 7.394 5.856h-1.078c.728-1.677.59-3.005.108-3.947C13.486.878 10.4.28 8.717 2.01zM2.212 10h1.315C4.593 11.183 6.05 12.458 8 13.795c1.949-1.337 3.407-2.612 4.473-3.795h1.315c-1.265 1.566-3.14 3.25-5.788 5-2.648-1.75-4.523-3.434-5.788-5"/>
+                    <path d="M10.464 3.314a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.5a.5.5 0 0 0 0 1H4a.5.5 0 0 0 .416-.223l1.473-2.209 1.647 4.118a.5.5 0 0 0 .945-.049l1.598-5.593 1.457 3.642A.5.5 0 0 0 12 9h3.5a.5.5 0 0 0 0-1h-3.162z"/>
+                </svg>
+            </div> &ensp;
+            <a class="navbar-brand"> Status </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <br>
+
+    <div class="container">
+        <!-- Card Events -->
+        <div class="events-card">
+           <h3> <div class="events-card-header">Active Events</div> </h3>
+            Events about services will be posted below by analysts.
+            <!-- Lista de eventos -->
+            <div class="mt-3">
+                {% for evento in eventos %}
+                <div class="event-item">
+                    <i class="fas fa-bell event-icon"></i>
+                    <strong>{{ evento.nome }}</strong>: {{ evento.descricao }}
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <br>
+
+        <!-- Tabela Service Health -->
+       <h5><b>Service Health</b></h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <img src="https://www.rancher.com/wp-content/uploads/2021/02/cropped-rancher-icon.png" alt="Rancher Icon" class="service-icon">
+                        Rancher
+                    </td>
+                    <td>
+                        {% if rancher_status == 'Healthy' %}
+                            <i class="fas fa-check-circle text-success status-icon"></i>
+                        {% else %}
+                            <i class="fas fa-times-circle text-danger status-icon"></i>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <i class="fab fa-google service-icon"></i> Google
+                    </td>
+                    <td>
+                        {% if google_status == 'Healthy' %}
+                            <i class="fas fa-check-circle text-success status-icon"></i>
+                        {% else %}
+                            <i class="fas fa-times-circle text-danger status-icon"></i>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Definição de Status -->
+        <div class="status-definition">
+            <p style="text-align:center">
+                <i class="fas fa-check-circle text-success"></i> Healthy
+                <i class="fas fa-times-circle text-danger ml-3"></i> Unhealthy
+            </p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
